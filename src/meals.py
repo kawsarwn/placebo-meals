@@ -44,10 +44,13 @@ def clean_meals(meals, food):
 
 
 def placebo_times(meal_times, food, start, end, per_meal=PLACEBOS_PER_MEAL,
-                  max_clock_diff_min=PLACEBO_CLOCK_WINDOW_MIN, step_min=5, seed=0):
+                  max_clock_diff_min=PLACEBO_CLOCK_WINDOW_MIN, step_min=5, seed=0, covered=None):
+    # covered: optional filter keeping only grid times the sensor records in full
     rng = np.random.default_rng(seed)
     grid = pd.Series(pd.date_range(start.ceil(f"{step_min}min"), end, freq=f"{step_min}min"))
     grid = grid[food_free(grid, food["time"])]
+    if covered is not None:
+        grid = grid[np.asarray(covered(grid), dtype=bool)]
     grid_minutes = grid.dt.hour * 60 + grid.dt.minute
 
     rows = []

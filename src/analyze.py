@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 
 from load import PARTICIPANTS, load_food, load_glucose, load_hr
-from meals import clean_meals, group_meals, placebo_times
 from movement import REST_THRESHOLD, STILL_THRESHOLD, adjust_hr, load_movement, still_fraction
+from placebo_test import participant_windows as score_windows
 from response import POST_MIN, PRE_MIN, SUSTAINED_FROM_MIN, SUSTAINED_TO_MIN, responses
 
 MIN_MEALS = 3
@@ -13,34 +13,24 @@ CURVE_MINUTES = np.arange(-PRE_MIN, POST_MIN, CURVE_STEP_MIN)
 
 def participant_windows(pid, seed=0):
     hr, glucose, food = load_hr(pid), load_glucose(pid), load_food(pid)
-    meals = clean_meals(group_meals(food), food)
 
     # outside the food log period we can't tell whether the person ate
     start = max(hr.index.min(), glucose.index.min(), food["time"].min())
     end = min(hr.index.max(), glucose.index.max(), food["time"].max())
-    placebos = placebo_times(meals["time"], food, start, end, seed=seed)
-
-    real = meals[["time", "calories", "carbs", "standard_breakfast"]].assign(
-        kind="meal", meal_index=range(len(meals))
-    )
-    windows = pd.concat([real, placebos.assign(kind="placebo")], ignore_index=True)
-    windows["time"] = pd.to_datetime(windows["time"])
-    hr_resp = responses(hr, windows["time"], step_min=1).add_prefix("hr_")
-    glucose_resp = responses(glucose, windows["time"], step_min=5).add_prefix("glucose_")
-    out = pd.concat([windows, hr_resp, glucose_resp], axis=1)
+    out = score_windows({"hr": (hr, 1), "glucose": (glucose, 5)}, food, start, end, seed=seed)
     # exploratory: peak after 5-minute smoothing
-    out["hr_peak_smooth"] = responses(hr.rolling("5min").mean(), windows["time"], step_min=1)["peak"]
+    out["hr_peak_smooth"] = responses(hr.rolling("5min").mean(), out["time"], step_min=1)["peak"]
 
     movement = load_movement(pid)
     adjusted, r2 = adjust_hr(hr, movement, food["time"])
-    adjusted_resp = responses(adjusted, windows["time"], step_min=1)
+    adjusted_resp = responses(adjusted, out["time"], step_min=1)
     out["hr_adj_peak"] = adjusted_resp["peak"]
     out["hr_adj_sustained"] = adjusted_resp["sustained"]
     out["movement_r2"] = r2
-    out["still_before"] = [still_fraction(movement, t, -PRE_MIN, 0, STILL_THRESHOLD) for t in windows["time"]]
-    out["rest_before"] = [still_fraction(movement, t, -PRE_MIN, 0, REST_THRESHOLD) for t in windows["time"]]
+    out["still_before"] = [still_fraction(movement, t, -PRE_MIN, 0, STILL_THRESHOLD) for t in out["time"]]
+    out["rest_before"] = [still_fraction(movement, t, -PRE_MIN, 0, REST_THRESHOLD) for t in out["time"]]
     out["still_after"] = [
-        still_fraction(movement, t, SUSTAINED_FROM_MIN, SUSTAINED_TO_MIN, STILL_THRESHOLD) for t in windows["time"]
+        still_fraction(movement, t, SUSTAINED_FROM_MIN, SUSTAINED_TO_MIN, STILL_THRESHOLD) for t in out["time"]
     ]
     out.insert(0, "pid", pid)
     return out

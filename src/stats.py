@@ -37,6 +37,16 @@ def detectable_difference(per, power=0.8, alpha=0.05):
     return float((t.ppf(1 - alpha / 2, n - 1) + t.ppf(power, n - 1)) * sd / np.sqrt(n))
 
 
+def holm(pvalues):
+    # Holm step-down adjusted p-values, returned in the input order
+    p = np.asarray(pvalues, dtype=float)
+    order = np.argsort(p)
+    adjusted = np.maximum.accumulate((len(p) - np.arange(len(p))) * p[order])
+    out = np.empty_like(p)
+    out[order] = np.minimum(adjusted, 1)
+    return out
+
+
 def summarize(per):
     if len(per) == 0:
         return {"participants": 0}
