@@ -97,6 +97,18 @@ Two changes, with reasons:
 - One chart: per-person win rates for glucose (v1, CGMacros) and heart rate (v1 wrist, CGMacros wrist, D1NAMO chest), plus breathing rate (D1NAMO chest). v1 appears for reference and isn't retested.
 - Results derived from D1NAMO are shared under CC BY-SA 4.0 and results derived from CGMacros under CC BY-NC-SA 4.0, as their licenses require.
 
+## Window counts (2026-10-24, before any outcome)
+
+`src/v2.py --counts` applied the count-only rules. It reads which windows have enough readings, never their values.
+
+- **D1NAMO:** 8 of 19 people meet the inclusion rule at ±60, ±90 and ±120 minutes alike, below the minimum of 10. Following the plan, D1NAMO uses ±120 minutes and its results are exploratory: they're reported but leave the corrected tests. Breathing rate also reaches 8 people, so it isn't tested. The included people have 53 clean meals and 121 placebo moments.
+  - The cause is strap contact. The share of strap minutes with a confident heart rate ranges from 2% to 98% per person, and two people are under 5%. Lowering the confidence cutoff to 50 would add one person, so I kept it.
+- **CGMacros:** 31 people in the main sample, all 31 included at ±60 minutes, with 759 clean meals and 1,722 placebo moments. 24 qualify for the movement-removed tests.
+- **Corrected tests:** the five CGMacros tests (heart rate peak and average, both with movement removed, and glucose).
+
 ## Deviations
 
-None yet.
+- **2026-10-24, data notes, no rule changes:**
+  - 11 of 45 CGMacros files have a smartwatch intensity level instead of METs. Those people have no movement input, so they have no fitting minutes and skip the movement-removed tests, as the 300-minute rule implies.
+  - CGMacros spreads Dexcom readings over every minute, so the 5-minute means from the plan apply.
+  - Zenodo and PhysioNet served the full archives slowly, so `src/download_v2.py` reads only the needed files out of them with HTTP range requests. Each file is checked against its CRC-32 instead of the archive-wide checksum.

@@ -4,8 +4,16 @@ import numpy as np
 import pandas as pd
 
 from meals import clean_meals, group_meals, placebo_times
-from response import responses
+from response import responses, window_response
 from stats import detectable_difference, per_participant, summarize
+
+
+def covered_by(signals):
+    """A filter for placebo_times: keep grid times where every given signal meets the 2/3 coverage rule."""
+    def check(times):
+        return [all(not np.isnan(window_response(series, t, step)["peak"]) for series, step in signals.values())
+                for t in times]
+    return check
 
 
 def participant_windows(signals, food, start, end, seed=0, covered=None, **placebo_options):

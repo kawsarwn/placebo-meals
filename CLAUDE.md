@@ -18,6 +18,10 @@ Analysis rules: @ANALYSIS_PLAN.md (v1) and @ANALYSIS_PLAN_v2.md (v2)
   - HR timestamps have minute resolution, with about 60 rows per minute.
   - Dexcom files start with metadata rows.
   - The food log has one row per food item.
+- **v2 data** (`src/download_v2.py`, into `data/d1namo/` and `data/cgmacros/`):
+  - D1NAMO v1.2.0 (Zenodo, doi:10.5281/zenodo.5651217, CC BY-SA 4.0; Dubosson et al. 2018). Healthy group, chest strap per-second summaries, photo food logs, finger-prick glucose. Strap off at night. Summary timestamps are day-first.
+  - CGMacros v1.0.0 (PhysioNet, CC BY-NC-SA 4.0). Per-minute smartwatch heart rate and METs (×10), Dexcom and Libre glucose, meal rows. Dates are shifted for privacy; clock times are real.
+  - Results derived from these keep their licenses: CC BY-SA 4.0 and CC BY-NC-SA 4.0.
 
 ## Rules
 
@@ -33,7 +37,7 @@ Analysis rules: @ANALYSIS_PLAN.md (v1) and @ANALYSIS_PLAN_v2.md (v2)
 ## Commands
 
 - Setup: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`
-- Data: `.venv/bin/python src/download.py`, then `.venv/bin/python src/motion.py`
+- Data: `.venv/bin/python src/download.py`, then `.venv/bin/python src/motion.py`; v2: `.venv/bin/python src/download_v2.py`
 - Tests: `.venv/bin/python -m pytest -q`
 - Full run: `.venv/bin/python run_all.py`
 
