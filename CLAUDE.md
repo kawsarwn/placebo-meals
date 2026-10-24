@@ -2,7 +2,7 @@
 
 A placebo test for wearable meal responses on public data. The question: does heart rate after a real meal differ from heart rate after a food-free "placebo" moment in the same person's day?
 
-Analysis rules: @ANALYSIS_PLAN.md
+Analysis rules: @ANALYSIS_PLAN.md (v1) and @ANALYSIS_PLAN_v2.md (v2)
 
 ## Data
 
