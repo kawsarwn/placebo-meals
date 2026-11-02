@@ -195,10 +195,16 @@ def main():
     result, per = run_tests(tables, counts)
 
     extra = {"seed_range": seed_range(d1, cgm, counts), "meal_timing": meal_timing_check()}
-    wide = {**tables, "D1NAMO": windows(d1, CLOCK_WINDOWS[-1])}
-    extra["d1namo_120_min"] = run_tests(wide, counts)[0].query("dataset == 'D1NAMO'").set_index("key")[
-        "median_auc"].to_dict()
-    everyone = {**tables, "CGMacros": windows(prepare_cgmacros(everyone=True), counts["CGMacros"]["clock_window_min"])}
+    if counts["D1NAMO"]["clock_window_min"] < CLOCK_WINDOWS[-1]:  # already ±120 when the count rule fell short
+        wide = {**tables, "D1NAMO": windows(d1, CLOCK_WINDOWS[-1])}
+        extra["d1namo_120_min"] = run_tests(wide, counts)[0].query("dataset == 'D1NAMO'").set_index("key")[
+            "median_auc"].to_dict()
+    everyone_prepared = prepare_cgmacros(everyone=True)
+    everyone = {**tables, "CGMacros": windows(everyone_prepared, counts["CGMacros"]["clock_window_min"])}
+    extra["cgmacros_everyone_people"] = len(everyone_prepared)
+    # clock check, as in v1: heart rate should bottom out at night if clock times are real
+    extra["cgmacros_lowest_hr_hour"] = {p["pid"]: int(p["signals"]["hr"][0].groupby(lambda t: t.hour).mean().idxmin())
+                                        for p in cgm}
     extra["cgmacros_everyone"] = run_tests(everyone, counts)[0].query("dataset == 'CGMacros'").set_index("key")[
         "median_auc"].to_dict()
 
@@ -207,6 +213,91 @@ def main():
     metrics = {"window_counts": counts, "tests": result.to_dict(orient="records"), "extra": extra}
     (RESULTS / "metrics.json").write_text(json.dumps(metrics, indent=2, default=float) + "\n")
     return metrics, per
+
+
+SCORE_LABELS = {
+    ("heart rate", "peak"): "Heart rate peak",
+    ("heart rate", "average"): "Heart rate average",
+    ("heart rate, movement removed", "peak"): "Heart rate peak, movement removed",
+    ("heart rate, movement removed", "average"): "Heart rate average, movement removed",
+    ("breathing rate", "peak"): "Breathing rate peak",
+    ("breathing rate", "average"): "Breathing rate average",
+    ("glucose", "peak"): "Glucose peak",
+}
+# chart rows: v1 for reference, then CGMacros (wrist) and D1NAMO (chest, exploratory)
+CHART_ROWS = [
+    ("v1_glucose", "Glucose rise: v1 wrist study"),
+    ("cgm_glucose", "Glucose rise: CGMacros"),
+    ("v1_hr_peak", "Heart rate peak: v1 wrist"),
+    ("cgm_hr_peak", "Heart rate peak: CGMacros wrist"),
+    ("d1_hr_peak", "Heart rate peak: D1NAMO chest (exploratory)"),
+    ("v1_hr_sustained", "Heart rate average: v1 wrist"),
+    ("cgm_hr_sustained", "Heart rate average: CGMacros wrist"),
+    ("d1_hr_sustained", "Heart rate average: D1NAMO chest (exploratory)"),
+    ("v1_adj_hr_sustained", "Average, movement removed: v1 wrist"),
+    ("cgm_adj_hr_sustained", "Average, movement removed: CGMacros wrist"),
+    ("d1_adj_hr_sustained", "Average, movement removed: D1NAMO chest (exploratory)"),
+]
+
+
+def chart_data(per, v1_per_participant):
+    v1 = pd.read_csv(v1_per_participant)
+    return {**{f"v1_{metric}": group for metric, group in v1.groupby("metric")}, **per}
+
+
+def pvalue(x):
+    return "< 0.001" if x < 0.001 else f"{x:.2f}"
+
+
+def markdown_table(tests):
+    lines = ["| Dataset | Sensor | Score | People | Real meal scores higher | Difference | p | Holm p | Pass | "
+             "Detectable at 80% power |", "|---|---|---|---|---|---|---|---|---|---|"]
+    for t in tests:
+        unit = "mg/dL" if t["signal"] == "glucose" else "bpm"
+        verdict = "exploratory" if t["exploratory"] else ("yes" if t["passed"] else "no")
+        holm_p = "" if t["exploratory"] else pvalue(t["holm_p"])
+        lines.append(f"| {t['dataset']} | {t['sensor']} | {SCORE_LABELS[(t['signal'], t['score'])]} | "
+                     f"{t['participants']} | {t['median_auc']:.0%} | {t['median_difference']:+.1f} {unit} | "
+                     f"{pvalue(t['wilcoxon_p'])} | {holm_p} | {verdict} | {t['detectable_difference']:.0f} {unit} |")
+    return "\n".join(lines)
+
+
+def display_values(m):
+    counts, extra = m["window_counts"], m["extra"]
+    d1, cgm, timing = counts["D1NAMO"], counts["CGMacros"], extra["meal_timing"]
+    lows = list(extra["cgmacros_lowest_hr_hour"].values())
+    values = {
+        "v2_table": markdown_table(m["tests"]),
+        "v2_min_people": MIN_PEOPLE,
+        "d1_total": d1["participants"],
+        "d1_people": d1["included"],
+        "d1_meals": d1["meals"],
+        "d1_placebos": d1["placebos"],
+        "d1_window": d1["clock_window_min"],
+        "cgm_people": cgm["included"],
+        "cgm_meals": cgm["meals"],
+        "cgm_placebos": cgm["placebos"],
+        "cgm_window": cgm["clock_window_min"],
+        "cgm_movement_people": cgm["movement_included"],
+        "cgm_everyone_people": extra["cgmacros_everyone_people"],
+        "cgm_night_low": sum(1 <= h <= 7 for h in lows),
+        "timing_people": timing["participants"],
+        "timing_positive": timing["participants_positive"],
+        "timing_rise": f"{timing['median_rise_mmol']:+.1f}",
+        "timing_p": pvalue(timing["wilcoxon_p"]),
+        "timing_logged": f"{timing['pairs_with_meal_logged_between']:.0%}",
+        "seed_draws": len(SEEDS),
+    }
+    for t in m["tests"]:
+        k = t["key"]
+        values.update({f"{k}_auc": f"{t['median_auc']:.0%}", f"{k}_diff": f"{t['median_difference']:+.1f}",
+                       f"{k}_positive": t["participants_positive"], f"{k}_n": t["participants"],
+                       f"{k}_p": pvalue(t["wilcoxon_p"]), f"{k}_mde": f"{t['detectable_difference']:.0f}"})
+        low, high = extra["seed_range"][k]
+        values[f"{k}_seed"] = f"{low:.0%} to {high:.0%}"
+    for k, auc in extra["cgmacros_everyone"].items():
+        values[f"{k}_everyone_auc"] = f"{auc:.0%}"
+    return values
 
 
 if __name__ == "__main__":

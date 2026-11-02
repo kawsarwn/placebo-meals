@@ -1,0 +1,294 @@
+{
+  "window_counts": {
+    "D1NAMO": {
+      "participants": 19,
+      "people_by_clock_window": {
+        "60": 8,
+        "90": 8,
+        "120": 8
+      },
+      "clock_window_min": 120,
+      "exploratory": true,
+      "included": 8,
+      "movement_included": 8,
+      "meals": 53,
+      "placebos": 121,
+      "breathing_included": 8,
+      "breathing_usable": false
+    },
+    "CGMacros": {
+      "participants": 31,
+      "people_by_clock_window": {
+        "60": 31
+      },
+      "clock_window_min": 60,
+      "exploratory": false,
+      "included": 31,
+      "movement_included": 24,
+      "meals": 759,
+      "placebos": 1722
+    }
+  },
+  "tests": [
+    {
+      "key": "d1_hr_peak",
+      "dataset": "D1NAMO",
+      "sensor": "chest",
+      "signal": "heart rate",
+      "score": "peak",
+      "exploratory": true,
+      "participants": 8,
+      "median_meal": 27.793068831226407,
+      "median_placebo": 35.02334348885655,
+      "median_difference": -1.2346926519438046,
+      "participants_positive": 3,
+      "wilcoxon_p": 0.3125,
+      "median_auc": 0.4642857142857143,
+      "mean_auc": 0.42531379960891236,
+      "detectable_difference": 15.625193991585135,
+      "holm_p": NaN,
+      "passed": false
+    },
+    {
+      "key": "d1_hr_sustained",
+      "dataset": "D1NAMO",
+      "sensor": "chest",
+      "signal": "heart rate",
+      "score": "average",
+      "exploratory": true,
+      "participants": 8,
+      "median_meal": 2.369634197724661,
+      "median_placebo": -0.9777061504403889,
+      "median_difference": 5.644541868282816,
+      "participants_positive": 5,
+      "wilcoxon_p": 0.7421875,
+      "median_auc": 0.6261904761904762,
+      "mean_auc": 0.5648430829821808,
+      "detectable_difference": 10.167392188346414,
+      "holm_p": NaN,
+      "passed": false
+    },
+    {
+      "key": "d1_adj_hr_peak",
+      "dataset": "D1NAMO",
+      "sensor": "chest",
+      "signal": "heart rate, movement removed",
+      "score": "peak",
+      "exploratory": true,
+      "participants": 8,
+      "median_meal": 21.128795955118406,
+      "median_placebo": 20.47936324524201,
+      "median_difference": 2.3623782103910624,
+      "participants_positive": 5,
+      "wilcoxon_p": 0.9453125,
+      "median_auc": 0.603125,
+      "mean_auc": 0.6087814773728777,
+      "detectable_difference": 12.1414311012698,
+      "holm_p": NaN,
+      "passed": false
+    },
+    {
+      "key": "d1_adj_hr_sustained",
+      "dataset": "D1NAMO",
+      "sensor": "chest",
+      "signal": "heart rate, movement removed",
+      "score": "average",
+      "exploratory": true,
+      "participants": 8,
+      "median_meal": 6.354982330350806,
+      "median_placebo": -2.3126883856339733,
+      "median_difference": 7.272054977340218,
+      "participants_positive": 6,
+      "wilcoxon_p": 0.0390625,
+      "median_auc": 0.873015873015873,
+      "mean_auc": 0.8012704583428267,
+      "detectable_difference": 9.301741380982607,
+      "holm_p": NaN,
+      "passed": false
+    },
+    {
+      "key": "cgm_hr_peak",
+      "dataset": "CGMacros",
+      "sensor": "wrist",
+      "signal": "heart rate",
+      "score": "peak",
+      "exploratory": false,
+      "participants": 31,
+      "median_meal": 24.264285714285712,
+      "median_placebo": 23.44375,
+      "median_difference": 4.663393939393941,
+      "participants_positive": 19,
+      "wilcoxon_p": 0.09416095819324255,
+      "median_auc": 0.5815934065934066,
+      "mean_auc": 0.5727730371278977,
+      "detectable_difference": 3.955729946229316,
+      "holm_p": 0.09416095819324255,
+      "passed": false
+    },
+    {
+      "key": "cgm_hr_sustained",
+      "dataset": "CGMacros",
+      "sensor": "wrist",
+      "signal": "heart rate",
+      "score": "average",
+      "exploratory": false,
+      "participants": 31,
+      "median_meal": 1.026467236467235,
+      "median_placebo": -1.8753439830091743,
+      "median_difference": 2.8477999226446435,
+      "participants_positive": 23,
+      "wilcoxon_p": 0.006217258051037788,
+      "median_auc": 0.5881147540983607,
+      "mean_auc": 0.5996511611108939,
+      "detectable_difference": 3.0292242631142083,
+      "holm_p": 0.012434516102075577,
+      "passed": true
+    },
+    {
+      "key": "cgm_adj_hr_peak",
+      "dataset": "CGMacros",
+      "sensor": "wrist",
+      "signal": "heart rate, movement removed",
+      "score": "peak",
+      "exploratory": false,
+      "participants": 23,
+      "median_meal": 18.610518321578002,
+      "median_placebo": 15.026550343690406,
+      "median_difference": 3.4937915838747315,
+      "participants_positive": 19,
+      "wilcoxon_p": 0.000152587890625,
+      "median_auc": 0.6545454545454545,
+      "mean_auc": 0.6380425146215449,
+      "detectable_difference": 1.8996330140505626,
+      "holm_p": 0.000457763671875,
+      "passed": true
+    },
+    {
+      "key": "cgm_adj_hr_sustained",
+      "dataset": "CGMacros",
+      "sensor": "wrist",
+      "signal": "heart rate, movement removed",
+      "score": "average",
+      "exploratory": false,
+      "participants": 23,
+      "median_meal": 2.8102450300844377,
+      "median_placebo": -1.3838763456686056,
+      "median_difference": 3.3105415756593155,
+      "participants_positive": 20,
+      "wilcoxon_p": 4.935264587402344e-05,
+      "median_auc": 0.6687473990844778,
+      "mean_auc": 0.6823666288934188,
+      "detectable_difference": 1.6668125985970612,
+      "holm_p": 0.00019741058349609375,
+      "passed": true
+    },
+    {
+      "key": "cgm_glucose",
+      "dataset": "CGMacros",
+      "sensor": "arm (CGM)",
+      "signal": "glucose",
+      "score": "peak",
+      "exploratory": false,
+      "participants": 31,
+      "median_meal": 44.165625000000006,
+      "median_placebo": 10.277350427350427,
+      "median_difference": 29.867870370370373,
+      "participants_positive": 31,
+      "wilcoxon_p": 9.313225746154785e-10,
+      "median_auc": 0.8232020547945206,
+      "mean_auc": 0.8164619627782236,
+      "detectable_difference": 10.158250714654654,
+      "holm_p": 4.6566128730773926e-09,
+      "passed": true
+    }
+  ],
+  "extra": {
+    "seed_range": {
+      "d1_hr_peak": [
+        0.4226190476190476,
+        0.4910714285714286
+      ],
+      "d1_hr_sustained": [
+        0.5220238095238096,
+        0.6261904761904762
+      ],
+      "d1_adj_hr_peak": [
+        0.584608843537415,
+        0.634375
+      ],
+      "d1_adj_hr_sustained": [
+        0.8507936507936508,
+        0.9119047619047619
+      ],
+      "cgm_hr_peak": [
+        0.5517094017094017,
+        0.5824652777777778
+      ],
+      "cgm_hr_sustained": [
+        0.5652421652421652,
+        0.605510752688172
+      ],
+      "cgm_adj_hr_peak": [
+        0.6245454545454545,
+        0.659047619047619
+      ],
+      "cgm_adj_hr_sustained": [
+        0.6687473990844778,
+        0.6946666666666667
+      ],
+      "cgm_glucose": [
+        0.8015202702702703,
+        0.84875
+      ]
+    },
+    "meal_timing": {
+      "participants": 19,
+      "pairs": 210,
+      "median_rise_mmol": 0.5166666666666666,
+      "participants_positive": 18,
+      "wilcoxon_p": 1.9073486328125e-05,
+      "pairs_with_meal_logged_between": 0.7952380952380952
+    },
+    "cgmacros_everyone_people": 45,
+    "cgmacros_lowest_hr_hour": {
+      "001": 5,
+      "002": 5,
+      "004": 5,
+      "006": 4,
+      "007": 22,
+      "008": 3,
+      "009": 4,
+      "010": 4,
+      "011": 4,
+      "013": 3,
+      "015": 5,
+      "016": 5,
+      "017": 7,
+      "018": 5,
+      "019": 6,
+      "020": 3,
+      "021": 4,
+      "022": 5,
+      "023": 3,
+      "026": 4,
+      "027": 4,
+      "029": 3,
+      "031": 3,
+      "032": 23,
+      "033": 5,
+      "034": 12,
+      "041": 1,
+      "043": 5,
+      "044": 4,
+      "045": 4,
+      "048": 3
+    },
+    "cgmacros_everyone": {
+      "cgm_hr_peak": 0.546875,
+      "cgm_hr_sustained": 0.5555555555555556,
+      "cgm_adj_hr_peak": 0.6403508771929824,
+      "cgm_adj_hr_sustained": 0.6491228070175439,
+      "cgm_glucose": 0.8237847222222222
+    }
+  }
+}
