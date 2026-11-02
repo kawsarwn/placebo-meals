@@ -23,6 +23,7 @@ MIN_MEALS = 3
 MIN_PLACEBOS = 2
 MIN_FIT_MINUTES = 300
 SEEDS = range(10)
+NIGHT_HOURS = (1, 7)  # clock check: lowest heart rate should fall in these hours
 
 # (key, dataset, sensor, signal, score, window column, who takes part)
 TESTS = [
@@ -252,7 +253,7 @@ def pvalue(x):
 def markdown_table(tests):
     lines = ["| Dataset | Sensor | Score | People | Real meal scores higher | Difference | p | Holm p | Pass | "
              "Detectable at 80% power |", "|---|---|---|---|---|---|---|---|---|---|"]
-    for t in tests:
+    for t in sorted(tests, key=lambda t: t["exploratory"]):  # corrected tests first
         unit = "mg/dL" if t["signal"] == "glucose" else "bpm"
         verdict = "exploratory" if t["exploratory"] else ("yes" if t["passed"] else "no")
         holm_p = "" if t["exploratory"] else pvalue(t["holm_p"])
@@ -275,18 +276,23 @@ def display_values(m):
         "d1_placebos": d1["placebos"],
         "d1_window": d1["clock_window_min"],
         "cgm_people": cgm["included"],
-        "cgm_meals": cgm["meals"],
-        "cgm_placebos": cgm["placebos"],
+        "cgm_meals": f"{cgm['meals']:,}",
+        "cgm_placebos": f"{cgm['placebos']:,}",
         "cgm_window": cgm["clock_window_min"],
         "cgm_movement_people": cgm["movement_included"],
         "cgm_everyone_people": extra["cgmacros_everyone_people"],
-        "cgm_night_low": sum(1 <= h <= 7 for h in lows),
+        "cgm_night_low": sum(NIGHT_HOURS[0] <= h <= NIGHT_HOURS[1] for h in lows),
+        "night_from": NIGHT_HOURS[0],
+        "night_to": NIGHT_HOURS[1],
+        "v2_clock_windows": ", ±".join(str(w) for w in CLOCK_WINDOWS[:-1]) + f" and ±{CLOCK_WINDOWS[-1]}",
+        "v2_family_size": int((~pd.DataFrame(m["tests"])["exploratory"]).sum()),
+        "cgm_max_a1c": cgmacros.MAX_A1C,
         "timing_people": timing["participants"],
         "timing_positive": timing["participants_positive"],
         "timing_rise": f"{timing['median_rise_mmol']:+.1f}",
         "timing_p": pvalue(timing["wilcoxon_p"]),
         "timing_logged": f"{timing['pairs_with_meal_logged_between']:.0%}",
-        "seed_draws": len(SEEDS),
+        "v2_seed_draws": len(SEEDS),
     }
     for t in m["tests"]:
         k = t["key"]

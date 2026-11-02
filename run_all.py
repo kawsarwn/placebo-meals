@@ -5,7 +5,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 
 from analyze import all_windows, curves
 from figure import DARK, LIGHT, make_figure, make_movement_figure, make_v2_figure
-from report import RESULTS, build_metrics, seed_range, write_outputs
+from report import RESULTS, build_metrics, display_values, render_readme, seed_range, write_outputs
 import v2
 
 SEED_DRAWS = 10
@@ -42,7 +42,8 @@ def main():
                    f"{v2_metrics['window_counts']['D1NAMO']['included']} people, exploratory.")
     make_v2_figure(chart, v2.CHART_ROWS, v2_subtitle, LIGHT, v2.RESULTS / "figure-light.png")
     make_v2_figure(chart, v2.CHART_ROWS, v2_subtitle, DARK, v2.RESULTS / "figure-dark.png")
-    print("done: v2")
+    render_readme({**display_values(metrics), **v2.display_values(v2_metrics)})
+    print("done: v2 and README")
 
 
 if __name__ == "__main__":

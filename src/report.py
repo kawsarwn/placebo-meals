@@ -209,4 +209,3 @@ def write_outputs(metrics, per):
     (RESULTS / "metrics.json").write_text(json.dumps(metrics, indent=2) + "\n")
     table = pd.concat([p.assign(metric=key) for key, p in per.items() if len(p)], ignore_index=True)
     table.round(4).to_csv(RESULTS / "per_participant.csv", index=False)
-    render_readme(display_values(metrics))
