@@ -13,6 +13,8 @@ Wearables that report meal responses need a way to check that the response comes
 
 **Glucose rises far more after real meals than after placebo moments. Heart rate shows no difference.**
 
+> **v2 update:** [repeated on 31 people from a second wrist dataset](#v2-a-second-wrist-dataset-and-a-first-look-at-a-chest-strap), heart rate rises by a median of +2.8 bpm from 30 to 120 minutes after real meals. That's below what v1 could detect, and too small to read from a single meal.
+
 | Score | After real meals | After placebo moments | Difference | Real meal scores higher |
 |---|---|---|---|---|
 | Glucose peak: highest in the 3 h after, minus the 30 min before | +44 mg/dL | +11 mg/dL | +35.0 mg/dL | 85% of the time |
@@ -105,6 +107,7 @@ I wrote the analysis rules down before looking at any heart rate result. They ar
 ## Limitations
 
 - **One dataset, built for another question.** The BIG IDEAs study collected these recordings to estimate glucose from wearables, so the meals were free-living and uncontrolled. The participants, adults aged 35 to 65 with HbA1c in the high-normal to prediabetic range, don't represent everyone. I haven't repeated this test on a second dataset yet.
+  - *v2 update:* [v2](#v2-a-second-wrist-dataset-and-a-first-look-at-a-chest-strap) repeats the test on a second wrist dataset of 31 people.
 - **Detection limits.**
   - The test has 15 people with a median of 11 clean meals each (range 4 to 17).
   - At 80% power, it can reliably detect average differences of about 13 mg/dL for glucose, 7 bpm for heart rate peak, 4 bpm for heart rate average and 5 bpm for the movement-removed average.
