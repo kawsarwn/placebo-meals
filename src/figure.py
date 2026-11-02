@@ -130,11 +130,13 @@ def make_movement_figure(curves, per_metric, subtitle, theme, path):
 
 def make_v2_figure(per_metric, rows, subtitle, theme, path):
     plt.rcParams["font.family"] = ["Arial", "DejaVu Sans"]
-    fig, ax = plt.subplots(figsize=(8.5, 0.62 * len(rows) + 1.4))
+    height = 0.62 * len(rows) + 1.4
+    fig, ax = plt.subplots(figsize=(8.5, height))
     fig.patch.set_facecolor(theme["surface"])
     auc_strip(ax, per_metric, theme, rows=rows)
-    fig.text(0.125, 1.0 + 0.9 / (0.62 * len(rows) + 1.4), "Wrist vs chest, same placebo test", color=theme["ink"],
+    top = ax.get_position().y1  # place the titles a fixed number of inches above the plot
+    fig.text(0.125, top + 0.95 / height, "Wrist vs chest, same placebo test", color=theme["ink"],
              fontsize=16, fontweight="bold")
-    fig.text(0.125, 1.0 + 0.45 / (0.62 * len(rows) + 1.4), subtitle, color=theme["secondary"], fontsize=10.5)
+    fig.text(0.125, top + 0.62 / height, subtitle, color=theme["secondary"], fontsize=10.5)
     fig.savefig(path, dpi=200, bbox_inches="tight", facecolor=theme["surface"])
     plt.close(fig)
