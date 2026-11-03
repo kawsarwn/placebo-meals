@@ -13,7 +13,7 @@ Wearables that report meal responses need a way to check that the response comes
 
 **Glucose rises far more after real meals than after placebo moments. Heart rate shows no difference.**
 
-> **v2 update:** [repeated on {{cgm_people}} people from a second wrist dataset](#v2-a-second-wrist-dataset-and-a-first-look-at-a-chest-strap), heart rate rises by a median of {{cgm_hr_sustained_diff}} bpm from {{sustained_from}} to {{sustained_to}} minutes after real meals. That's below what v1 could detect, and too small to read from a single meal.
+> **v2 update:** [repeated on {{cgm_people}} people from a second wrist dataset](#v2-a-second-wrist-dataset-and-a-first-look-at-a-chest-strap), heart rate is a median of {{cgm_hr_sustained_diff}} bpm higher from {{sustained_from}} to {{sustained_to}} minutes after real meals than after placebo moments. That's below what v1 could detect, and too small to read from a single meal.
 
 | Score | After real meals | After placebo moments | Difference | Real meal scores higher |
 |---|---|---|---|---|
