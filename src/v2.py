@@ -38,7 +38,7 @@ TESTS = [
     ("cgm_adj_hr_peak", "CGMacros", "wrist", "heart rate, movement removed", "peak", "hr_adj_peak", "movement"),
     ("cgm_adj_hr_sustained", "CGMacros", "wrist", "heart rate, movement removed", "average", "hr_adj_sustained",
      "movement"),
-    ("cgm_glucose", "CGMacros", "arm (CGM)", "glucose", "peak", "glucose_peak", "main"),
+    ("cgm_glucose", "CGMacros", "abdomen (CGM)", "glucose", "peak", "glucose_peak", "main"),
 ]
 
 

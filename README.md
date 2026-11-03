@@ -141,7 +141,7 @@ No public dataset I found has both sensors on the same people with timestamped m
 | CGMacros | wrist | Heart rate average | 31 | 59% | +2.8 bpm | 0.01 | 0.01 | yes | 3 bpm |
 | CGMacros | wrist | Heart rate peak, movement removed | 23 | 65% | +3.5 bpm | < 0.001 | < 0.001 | yes | 2 bpm |
 | CGMacros | wrist | Heart rate average, movement removed | 23 | 67% | +3.3 bpm | < 0.001 | < 0.001 | yes | 2 bpm |
-| CGMacros | arm (CGM) | Glucose peak | 31 | 82% | +29.9 mg/dL | < 0.001 | < 0.001 | yes | 10 mg/dL |
+| CGMacros | abdomen (CGM) | Glucose peak | 31 | 82% | +29.9 mg/dL | < 0.001 | < 0.001 | yes | 10 mg/dL |
 | D1NAMO | chest | Heart rate peak | 8 | 46% | -1.2 bpm | 0.31 |  | exploratory | 16 bpm |
 | D1NAMO | chest | Heart rate average | 8 | 63% | +5.6 bpm | 0.74 |  | exploratory | 10 bpm |
 | D1NAMO | chest | Heart rate peak, movement removed | 8 | 60% | +2.4 bpm | 0.95 |  | exploratory | 12 bpm |

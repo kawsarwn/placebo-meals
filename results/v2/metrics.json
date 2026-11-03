@@ -185,7 +185,7 @@
     {
       "key": "cgm_glucose",
       "dataset": "CGMacros",
-      "sensor": "arm (CGM)",
+      "sensor": "abdomen (CGM)",
       "signal": "glucose",
       "score": "peak",
       "exploratory": false,
